@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kill or Build</title>
+<meta name="description" content="Score a business idea on evidence, not opinions. Six dimensions, a Say/Do evidence ladder, live World Bank market data and a sourced verdict.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f6f3; --surface:#ffffff; --surface-2:#f0eee9; --text:#1c1b19; --muted:#6b675f; --line:#e2dfd8;
+  --accent:#1c1b19; --accent-text:#ffffff;
+  --kill:#c8372d; --kill-bg:#fbe9e7; --inv:#b7791f; --inv-bg:#fdf3e1; --test:#2b6cb0; --test-bg:#e6f0fa; --build:#2f855a; --build-bg:#e5f4ec;
+  --radius:10px; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141413; --surface:#1d1c1a; --surface-2:#262522; --text:#f0eee9; --muted:#a29d93; --line:#34322e;
+    --accent:#f0eee9; --accent-text:#141413;
+    --kill:#f07167; --kill-bg:#3a1f1c; --inv:#f2b84b; --inv-bg:#3a2e17; --test:#6fa8ef; --test-bg:#1a2a3d; --build:#5cc98d; --build-bg:#173025;
+    --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141413; --surface:#1d1c1a; --surface-2:#262522; --text:#f0eee9; --muted:#a29d93; --line:#34322e;
+  --accent:#f0eee9; --accent-text:#141413;
+  --kill:#f07167; --kill-bg:#3a1f1c; --inv:#f2b84b; --inv-bg:#3a2e17; --test:#6fa8ef; --test-bg:#1a2a3d; --build:#5cc98d; --build-bg:#173025;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:14.5px/1.6 Poppins,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:880px;margin:0 auto;padding:24px 16px 64px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.brand{font-weight:800;font-size:20px;letter-spacing:-.02em;text-decoration:none}
+.brand span{color:var(--kill)}
+.brand b{color:var(--build)}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+h1{font-size:28px;line-height:1.2;letter-spacing:-.02em;margin:0 0 6px}
+h2{font-size:20px;letter-spacing:-.01em;margin:0 0 4px}
+h3{font-size:15px;margin:0 0 8px}
+p{margin:0 0 12px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:9px 14px;font:inherit;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}
+.btn.primary:hover{opacity:.9}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn:disabled{opacity:.4;cursor:default}
+.progress{display:flex;gap:4px;margin:0 0 16px}
+.progress button{flex:1;height:6px;border:0;border-radius:3px;background:var(--line);cursor:pointer;padding:0}
+.progress button.done{background:var(--muted)}
+.progress button.on{background:var(--text)}
+.step-meta{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted);margin-bottom:8px}
+label.f{display:block;font-weight:600;margin:14px 0 6px}
+label.f .hint{display:block;font-weight:400;color:var(--muted);font-size:13px}
+input[type=text],input[type=number],select,textarea{width:100%;font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+textarea{min-height:64px;resize:vertical}
+input:focus,select:focus,textarea:focus,.btn:focus-visible{outline:2px solid var(--test);outline-offset:1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:640px){.row{grid-template-columns:1fr}}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg label{padding:7px 12px;cursor:pointer;font-size:14px;border-right:1px solid var(--line);user-select:none}
+.seg label:last-child{border-right:0}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg input:checked+span{font-weight:700}
+.seg label:has(input:checked){background:var(--text);color:var(--bg)}
+.q{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:0}
+.q p{margin:0}
+@media (max-width:640px){.q{flex-direction:column;align-items:flex-start}}
+.ladder{display:flex;flex-direction:column;gap:6px}
+.ladder label{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.ladder label:has(input:checked){border-color:var(--text);background:var(--surface-2)}
+.ladder input{margin-top:4px}
+.lvl{font-variant-numeric:tabular-nums;font-weight:700;min-width:16px}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;background:var(--surface-2);color:var(--muted);margin-left:6px;vertical-align:1px}
+.tag.do{background:var(--build-bg);color:var(--build)}
+.tag.say{background:var(--inv-bg);color:var(--inv)}
+.tag.mk{background:var(--test-bg);color:var(--test)}
+.checks label{display:flex;gap:8px;align-items:flex-start;padding:4px 0;font-size:14px}
+.checks input{margin-top:4px}
+.stat{display:flex;gap:14px;align-items:flex-start;background:var(--surface-2);border-radius:8px;padding:12px 14px;margin:14px 0 0}
+.stat .num{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;min-width:64px}
+.stat p{margin:0;font-size:14px}
+.stat cite{display:block;font-style:normal;font-size:12px;color:var(--muted);margin-top:4px}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:8px}
+.data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+@media (max-width:640px){.data-grid{grid-template-columns:1fr 1fr}}
+.datum{background:var(--surface-2);border-radius:8px;padding:10px 12px}
+.datum .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.datum .k{font-size:12px;color:var(--muted)}
+.datum a{font-size:11px;color:var(--muted)}
+.verdict{display:inline-block;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border-radius:6px;padding:2px 8px;font-size:12px}
+.v-kill{background:var(--kill-bg);color:var(--kill)} .v-investigate{background:var(--inv-bg);color:var(--inv)}
+.v-test{background:var(--test-bg);color:var(--test)} .v-build{background:var(--build-bg);color:var(--build)}
+.hero{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.hero .big{font-size:44px;font-weight:900;letter-spacing:-.03em;line-height:1;padding:14px 18px;border-radius:12px}
+.hero .why{flex:1;min-width:240px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 8px;border-top:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:600;border-top:0}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:4px;width:80px}
+.bar i{display:block;height:100%;background:var(--text)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.matrix svg{width:100%;height:auto;display:block}
+.exp{border-top:1px solid var(--line);padding:12px 0}
+.exp:first-of-type{border-top:0}
+.exp h3{margin:0 0 4px}
+.exp .meta{font-size:12px;color:var(--muted)}
+.refs{font-size:13px;color:var(--muted);padding-left:18px;margin:0}
+.refs li{margin-bottom:4px}
+.warn{border-left:3px solid var(--inv);padding:8px 12px;background:var(--inv-bg);border-radius:0 6px 6px 0;font-size:14px;margin:10px 0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+footer{margin-top:32px;font-size:12px;color:var(--muted)}
+.print-only{display:none}
+@media print{
+  body{background:#fff;color:#000;font-size:12px}
+  .no-print,header.top .top-actions,.progress,.step-meta,.nav{display:none!important}
+  .print-only{display:block}
+  .card{box-shadow:none;break-inside:avoid;padding:12px;margin-bottom:10px}
+  .wrap{padding:0;max-width:none}
+  a{text-decoration:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#" id="home"><span>Kill</span> or <b>Build</b></a>
+    <div class="top-actions">
+      <button class="btn ghost" id="btn-example" type="button">Load example</button>
+      <button class="btn ghost" id="btn-reset" type="button">Start over</button>
+      <button class="btn ghost" id="btn-theme" type="button" aria-label="Toggle theme">◐</button>
+    </div>
+  </header>
+  <main id="app"></main>
+  <footer>
+    Kill or Build is an independent portfolio project. The evidence ladder is inspired by the Say/Do evidence idea in
+    <em>Testing Business Ideas</em> (Bland &amp; Osterwalder, 2019) and the Innovation Project Scorecard by Strategyzer AG; it is not affiliated with or endorsed by Strategyzer.
+    Country data: World Bank Open Data (CC BY 4.0). Nothing you type leaves your browser, except the country code sent to the World Bank API.
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   Content: dimensions, evidence ladder, benchmarks, experiments
+   ============================================================ */
+
+const SOURCES = {
+  cbi: {label:'CB Insights, "The top reasons startups fail" (Mar 2026, 385 VC-backed shutdowns with an identifiable cause)', url:'https://www.cbinsights.com/research/report/startup-failure-reasons-top/'},
+  genome: {label:'Startup Genome Report (2011), via GeekWire', url:'https://www.geekwire.com/2011/number-reason-startups-fail-premature-scaling/'},
+  sk: {label:'Ramanujam & Tacke, Monetizing Innovation (Wiley, 2016) / Simon-Kucher', url:'https://www.simon-kucher.com/en/insights/monetizing-innovation'},
+  ellis: {label:'Sean Ellis PMF survey; see MeasuringU for the benchmark\'s limits', url:'https://measuringu.com/product-market-fit-item/'},
+  mom: {label:'Rob Fitzpatrick, The Mom Test (2013)', url:'https://www.momtestbook.com/'},
+  jtbd: {label:'Christensen et al., "Know Your Customers\' Jobs to Be Done", HBR (2016)', url:'https://hbr.org/2016/09/know-your-customers-jobs-to-be-done'},
+  pg: {label:'Paul Graham, "How to Get Startup Ideas" (2012)', url:'https://paulgraham.com/startupideas.html'},
+  tbi: {label:'Bland & Osterwalder, Testing Business Ideas (Wiley, 2019)', url:'https://www.wiley.com/en-us/Testing+Business+Ideas-p-9781119551447'},
+  wb: {label:'World Bank Open Data, World Development Indicators', url:'https://data.worldbank.org/'}
+};
+
+const LEVELS = [
+  {v:0, kind:'',   tag:'None',   label:'Only my own opinion so far.'},
+  {v:1, kind:'say',tag:'Say',    label:'Desk research, anecdotes, or people telling me it is a good idea.'},
+  {v:2, kind:'say',tag:'Say',    label:'5+ interviews with target customers about what they actually did in the past.'},
+  {v:3, kind:'do', tag:'Do',     label:'Low-commitment action: sign-ups, waitlist, fake-door clicks, emails shared.'},
+  {v:4, kind:'do', tag:'Do',     label:'High-commitment action: pre-orders, deposits, letters of intent, paid pilots.'},
+  {v:5, kind:'mk', tag:'Market', label:'Paying customers who come back or renew.'}
+];
+
+const RED_FLAGS = [
+  'Most of it is compliments ("great idea!", "I love it").',
+  'Answers are about the future ("I would use it", "I would pay").',
+  'I mostly talked to friends, family or colleagues.',
+  'I pitched the idea before asking about their problem.'
+];
+
+const YN = [{v:1,l:'Yes'},{v:0.5,l:'Partly'},{v:0,l:'No'}];
+
+const DIMS = [
+  { id:'problem', name:'Problem & urgency', origin:'YC: Problem · HBS: pain-point hypothesis', weight:25, fatal:true,
+    intro:'Is there a painful, frequent job your customer is already trying to get done?',
+    qs:[
+      'Can you name the specific moment the problem shows up (the job to be done), not a general frustration?',
+      'Are people already spending money or time on a workaround today?',
+      'Does it happen often (weekly or more), or is it expensive when it does?'
+    ],
+    evidenceHint:'Evidence here = proof the pain exists and is acted on, not proof people like your solution.',
+    stat:{num:'43%', text:'of failed VC-backed startups cited product–market fit as a cause of failure, the most common reason after running out of cash.', src:'cbi'},
+    exps:{
+      say:[{t:'Problem interviews (Mom Test)', c:'€0 · 1–2 weeks', d:'Talk to 8–10 target customers. Ask only about the last time the problem happened, what they did, and what it cost them. No pitching.', m:'Define before you start, e.g. "at least 6 of 10 describe a recent workaround they paid for or spent hours on".', src:'mom'}],
+      do:[{t:'Problem-only landing page', c:'€0 · 1 week', d:'A page that names the problem in the customer\'s own words (taken from interviews) with a single "Get early access" email form. Share it in 2–3 communities where they gather.', m:'Rule of thumb, not a benchmark: set a visit→sign-up target before launch and only count traffic from your segment.', src:'tbi'}],
+      strong:[{t:'Concierge MVP', c:'€0–50 · 2–3 weeks', d:'Solve the problem by hand for 3–5 customers. Watch whether they come back and what they would pay to keep it.', m:'Repeat usage without reminders.', src:'tbi'}]
+    }},
+  { id:'customer', name:'Target customer & segment', origin:'HBS: target demographics', weight:15,
+    intro:'Who exactly are your first 100 customers, and can you reach them?',
+    qs:[
+      'Can you describe the first 100 customers narrowly (role, situation, trigger), not "everyone who…"?',
+      'Do you know where they gather (communities, events, lists, places)?',
+      'Is the person with the problem the one who pays, or do you know who the buyer is?'
+    ],
+    evidenceHint:'Evidence here = you found and talked to people in this exact segment, and they behaved alike.',
+    stat:{num:'40%', text:'"very disappointed" if the product disappeared is the classic product–market fit threshold. Useful later to find your narrowest, most passionate segment, but it is a rule of thumb from ~100 startups, not peer-reviewed.', src:'ellis'},
+    exps:{
+      say:[{t:'Segment mapping sprint', c:'€0 · 1 week', d:'List 3 candidate segments. Find 5 real people per segment online and ask each for 15 minutes about the problem. Note who replies and who cares.', m:'One segment clearly replies faster and describes the pain in stronger terms.', src:'mom'}],
+      do:[{t:'Ad-free channel test', c:'€0 · 1 week', d:'Post the same problem-led message in the top 2 places each segment gathers. Track replies and sign-ups per segment.', m:'Pick the segment with the best sign-up rate per post, not the biggest one.', src:'tbi'}],
+      strong:[{t:'Pre-sale to one segment', c:'€0 · 2 weeks', d:'Offer a founding-customer deal (discount for paying now) to your best segment only.', m:'Count paid commitments, not interest.', src:'tbi'}]
+    }},
+  { id:'market', name:'Market size & timing', origin:'HBS: secondary research · bottom-up, per country', weight:15,
+    intro:'Bottom-up: how many reachable customers × what they pay. And why now?',
+    qs:[
+      'Is there a recent change (technology, regulation, behaviour) that makes this possible or needed now?',
+      'Is your segment growing, not shrinking?'
+    ],
+    usesMarket:true,
+    evidenceHint:'Evidence here = your segment share and price come from a real source or your own data, not a guess.',
+    stat:{num:'29%', text:'of failed VC-backed startups cited bad timing or macro conditions.', src:'cbi'},
+    exps:{
+      say:[{t:'Source your segment share', c:'€0 · 2–3 days', d:'Replace your guessed segment % with a cited number: a national statistics office, an industry association report, or a public dataset. Re-run the sizing.', m:'Every input in the sizing has a link next to it.', src:'wb'}],
+      do:[{t:'Count real reach', c:'€0 · 1 week', d:'Count reachable customers you can actually name: members of the 5 biggest communities, lists or directories for your segment.', m:'Reachable count ≥ what you need for your first year of revenue.', src:'tbi'}],
+      strong:[{t:'Cohort check', c:'€0 · ongoing', d:'Track how many new customers per month come from each channel and whether the pool is shrinking.', m:'Acquisition per month is stable or growing without raising spend.', src:'tbi'}]
+    }},
+  { id:'competition', name:'Competition & unique insight', origin:'YC: unique insight · HBS: competitors', weight:15,
+    intro:'What do customers use today, and what do you know that others don\'t?',
+    qs:[
+      'Can you list the top 3 alternatives, including "do nothing" and spreadsheets?',
+      'Do you have an insight that competitors don\'t believe or haven\'t noticed?',
+      'Would your advantage be hard to copy within 12 months?'
+    ],
+    evidenceHint:'Evidence here = customers told or showed you why current alternatives fail them.',
+    stat:{num:'"Few"', text:'The best startup ideas tend to be ones that few others realise are worth doing: your insight is the part competitors don\'t see yet.', src:'pg'},
+    exps:{
+      say:[{t:'Alternatives teardown', c:'€0 · 3 days', d:'In interviews, ask "what did you try before?" and "what did you stop using and why?". Read the 1–2 star reviews of the top 3 alternatives.', m:'A repeated complaint that your idea solves and the alternatives ignore.', src:'mom'}],
+      do:[{t:'Switch test', c:'€0 · 1–2 weeks', d:'Ask users of a competitor to try your manual version for one real task. Watch whether they switch for that task.', m:'They do the task with you a second time.', src:'tbi'}],
+      strong:[{t:'Win/loss notes', c:'€0 · ongoing', d:'For every customer you win or lose, write down the alternative they compared you with and why they chose.', m:'You win more than you lose against your main alternative.', src:'tbi'}]
+    }},
+  { id:'model', name:'Business model & willingness to pay', origin:'YC: Business model · HBS: price hypothesis', weight:20, fatal:true,
+    intro:'Who pays, how much, how often, and does it cover the cost of getting them?',
+    qs:[
+      'Do you know who pays, how much, and how (subscription, per use, one-off)?',
+      'Is the price anchored to something they already pay for the workaround?',
+      'Would a customer pay back what it costs to acquire them within 12 months?'
+    ],
+    evidenceHint:'Evidence here = money or a clear commitment to pay. Saying "I\'d pay" counts as Say, not Do.',
+    stat:{num:'72%', text:'of innovations miss their financial targets or fail outright, largely because willingness to pay was never tested before building.', src:'sk', alt:{num:'19%', text:'of failed VC-backed startups cited unsustainable unit economics.', src:'cbi'}},
+    exps:{
+      say:[{t:'Price conversation', c:'€0 · 1 week', d:'In interviews ask what they pay for the current workaround and who approved it. Never ask "would you pay X?". Ask what they paid last time.', m:'You can name a real budget line your price replaces.', src:'mom'}],
+      do:[{t:'Fake-door pricing page', c:'€0 · 1 week', d:'Show 2–3 price tiers with a "Buy" button that leads to "We\'re launching soon, join the list". Track clicks per tier.', m:'Clicks on a paid tier from your segment, not just page views.', src:'tbi'}],
+      strong:[{t:'Pre-order or paid pilot', c:'€0 · 2–3 weeks', d:'Ask 5–10 qualified prospects for a refundable deposit or a paid pilot.', m:'Money received. Set the target number before asking.', src:'tbi'}]
+    }},
+  { id:'founder', name:'Founder-market fit & go-to-market', origin:'YC: Team · channels', weight:10,
+    intro:'Why are you the right team, and how do you get the first 100 customers?',
+    qs:[
+      'Have you lived this problem or worked in this industry?',
+      'Can you reach 100 target customers in 30 days without paid ads?',
+      'Can you build (or run by hand) a first version without raising money?'
+    ],
+    evidenceHint:'Evidence here = you already reached people through a channel you control.',
+    stat:{num:'74%', text:'of high-growth internet startups studied failed due to premature scaling: spending on growth before the model was proven.', src:'genome', alt:{num:'70%', text:'of failed VC-backed startups ran out of capital: usually the final cause, not the root problem.', src:'cbi'}},
+    exps:{
+      say:[{t:'Unfair-advantage list', c:'€0 · 1 day', d:'Write down the people, skills, data and access you have that a competitor would not. Ask 3 people from the industry whether it matters.', m:'At least one advantage they agree is hard to get.', src:'pg'}],
+      do:[{t:'30-day reach challenge', c:'€0 · 30 days', d:'Using only free channels you control (network, communities, content), try to get 100 target customers into a conversation or list.', m:'100 reached, with a cost per contact you can repeat.', src:'tbi'}],
+      strong:[{t:'Repeatable channel', c:'€0 · 1 month', d:'Run the best channel again with a new batch and check the numbers hold.', m:'Second batch converts within the same range as the first.', src:'genome'}]
+    }}
+];
+
+const COUNTRIES = [
+  ['AR','Argentina'],['BO','Bolivia'],['BR','Brazil'],['CA','Canada'],['CL','Chile'],['CO','Colombia'],['CR','Costa Rica'],
+  ['DE','Germany'],['DO','Dominican Republic'],['EC','Ecuador'],['ES','Spain'],['FR','France'],['GB','United Kingdom'],
+  ['GT','Guatemala'],['IN','India'],['IT','Italy'],['MX','Mexico'],['PA','Panama'],['PE','Peru'],['PR','Puerto Rico'],
+  ['PT','Portugal'],['PY','Paraguay'],['SV','El Salvador'],['US','United States'],['UY','Uruguay']
+];
+
+const INDICATORS = {
+  pop:   {code:'SP.POP.TOTL',        label:'Population'},
+  wa:    {code:'SP.POP.1564.TO.ZS',  label:'Aged 15–64 (% of pop.)'},
+  net:   {code:'IT.NET.USER.ZS',     label:'Internet users (% of pop.)'},
+  gdp:   {code:'NY.GDP.PCAP.CD',     label:'GDP per capita (US$)'},
+  nreg:  {code:'IC.BUS.NREG',        label:'New businesses registered / yr'},
+  ndens: {code:'IC.BUS.NDNS.ZS',     label:'New business density (per 1,000 aged 15–64)'}
+};
+
+const EXAMPLE = {
+  name:'SDR on Demand',
+  oneliner:'An outsourced SDR team, as a monthly service, that books qualified sales meetings for Spanish SMEs that can\'t hire in-house reps.',
+  country:'ES', type:'b2b', price:24000, capture:0.1,
+  share:'', shareSrc:'',
+  businesses:203270,
+  bizSrc:'Cifras PYME, Dec 2025 (Spanish Ministry of Industry, Ipyme): 175,597 small (10–49 employees) + 27,673 medium (50–249) firms. Upper bound: not all of them sell B2B. https://ipyme.org/Publicaciones/Cifras%20PYME/CifrasPyme_diciembre_2025.pdf',
+  answers:{
+    problem:{q:[1,1,0.5], e:3, flags:[false,false,false,false]},
+    customer:{q:[0.5,1,1], e:2, flags:[false,false,false,false]},
+    market:{q:[0.5,1], e:2, flags:[false,false,false,false]},
+    competition:{q:[1,0.5,0], e:1, flags:[false,false,false,false]},
+    model:{q:[1,0.5,0.5], e:2, flags:[false,true,false,false]},
+    founder:{q:[1,1,1], e:3, flags:[]}
+  }
+};
+
+/* ============================================================
+   State
+   ============================================================ */
+const STORE_KEY = 'kill-or-build:v1';
+function blankState(){
+  const answers = {};
+  DIMS.forEach(d => answers[d.id] = {q:d.qs.map(()=>null), e:null, flags:RED_FLAGS.map(()=>false)});
+  return {step:0, name:'', oneliner:'', country:'', type:'b2c', price:'', share:'', capture:2, shareSrc:'', businesses:'', bizSrc:'', answers};
+}
+let S = blankState();
+const WB = {}; // country -> {key:{value,date}}
+
+function save(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(S)); }catch(e){} }
+function loadState(){
+  const fromHash = decodeShare(location.hash.slice(1));
+  if (fromHash) return merge(fromHash);
+  try{ const raw = localStorage.getItem(STORE_KEY); if (raw) return merge(JSON.parse(raw)); }catch(e){}
+  return blankState();
+}
+function merge(src){
+  const b = blankState();
+  Object.assign(b, src);
+  DIMS.forEach(d => { b.answers[d.id] = Object.assign(blankState().answers[d.id], (src.answers||{})[d.id]||{}); });
+  return b;
+}
+function encodeShare(){ return 'r=' + btoa(unescape(encodeURIComponent(JSON.stringify(Object.assign({}, S, {step:STEPS.length-1}))))); }
+function decodeShare(h){
+  if (!h.startsWith('r=')) return null;
+  try{ return JSON.parse(decodeURIComponent(escape(atob(h.slice(2))))); }catch(e){ return null; }
+}
+
+/* ============================================================
+   Scoring
+   ============================================================ */
+function marketSize(){
+  const w = WB[S.country]; const price = +S.price || 0;
+  if (S.type === 'b2b'){
+    const n = +S.businesses || 0;
+    if (!n || !price) return null;
+    const sam = n * price;
+    return {customers:n, sam, som: sam * (+S.capture||0)/100};
+  }
+  if (!w || !w.pop || !price || !S.share) return null;
+  const customers = w.pop.value * ((w.wa?.value ?? 100)/100) * ((w.net?.value ?? 100)/100) * (+S.share/100);
+  const sam = customers * price;
+  return {customers, sam, som: sam * (+S.capture||0)/100};
+}
+function sizeScore(m){
+  if (!m) return 0;
+  if (m.sam >= 100e6) return 1;
+  if (m.sam >= 10e6) return 0.75;
+  if (m.sam >= 1e6) return 0.5;
+  return 0;
+}
+function score(d){
+  const a = S.answers[d.id];
+  const parts = a.q.map(v => v ?? 0);
+  if (d.usesMarket) parts.push(sizeScore(marketSize()));
+  const H = parts.reduce((x,y)=>x+y,0) / parts.length * 5;
+  const raw = a.e ?? 0;
+  const flags = (a.flags||[]).filter(Boolean).length;
+  // Mom Test adjustment: red flags only discount "Say" evidence
+  const E = raw <= 2 ? Math.max(0, raw - 0.5*flags) : raw;
+  return {H, E, raw, flags, verdict: dimVerdict(H,E)};
+}
+function dimVerdict(H,E){
+  if (H < 2) return 'kill';
+  if (E >= 3 && H >= 3) return 'build';
+  if (E >= 2) return 'test';
+  return 'investigate';
+}
+function overall(){
+  const rows = DIMS.map(d => Object.assign({d}, score(d)));
+  const W = DIMS.reduce((s,d)=>s+d.weight,0);
+  const Hw = rows.reduce((s,r)=>s+r.H*r.d.weight,0)/W;
+  const Ew = rows.reduce((s,r)=>s+r.E*r.d.weight,0)/W;
+  const fatal = rows.filter(r => r.d.fatal && r.verdict === 'kill');
+  let verdict, why;
+  if (fatal.length || Hw < 2){
+    verdict = 'kill';
+    why = fatal.length ? `The ${fatal.map(r=>r.d.name.toLowerCase()).join(' and ')} hypothesis is too weak. Rethink it before spending time on tests.`
+                       : 'The hypotheses across dimensions are weak on average. Reframe the idea before testing it.';
+  } else if (Ew >= 3 && rows.every(r=>r.verdict!=='kill') && score(DIMS[0]).E >= 3 && score(DIMS[4]).E >= 3){
+    verdict = 'build'; why = 'You have behavioural (Do) evidence on the problem and on willingness to pay. Build the smallest version that delivers it.';
+  } else if (Ew >= 1.5){
+    verdict = 'test'; why = 'You have some evidence, mostly from what people say. Move from Say to Do: test whether they act or pay.';
+  } else {
+    verdict = 'investigate'; why = 'The idea is plausible, but the evidence is mostly opinion. Talk to customers about their past behaviour before building anything.';
+  }
+  // Riskiest assumption: highest weight × missing evidence
+  const risky = (verdict==='kill' && fatal[0]) ? fatal[0]
+    : rows.slice().sort((a,b)=> b.d.weight*(5-b.E) - a.d.weight*(5-a.E))[0];
+  return {rows, Hw, Ew, verdict, why, risky};
+}
+function expTier(E){ return E < 2 ? 'say' : E < 3 ? 'do' : 'strong'; }
+
+/* ============================================================
+   World Bank data (live, free, no key)
+   ============================================================ */
+async function fetchWB(cc){
+  if (!cc || WB[cc]) return;
+  WB[cc] = {loading:true};
+  try{
+    const entries = await Promise.all(Object.entries(INDICATORS).map(async ([k,ind]) => {
+      const r = await fetch(`https://api.worldbank.org/v2/country/${cc}/indicator/${ind.code}?format=json&mrnev=1`);
+      const j = await r.json();
+      const row = j?.[1]?.[0];
+      return [k, row && row.value != null ? {value:row.value, date:row.date, code:ind.code} : null];
+    }));
+    WB[cc] = Object.fromEntries(entries);
+  }catch(e){
+    WB[cc] = {error:true};
+  }
+  render();
+}
+
+/* ============================================================
+   Rendering helpers
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const linkify = s => esc(s).replace(/https?:\/\/[^\s<]+[^\s<.,)]/g, u => `<a href="${u}" target="_blank" rel="noopener">source</a>`);
+const fmt = n => n == null || isNaN(n) ? '—' : n >= 1e9 ? (n/1e9).toFixed(1)+'B' : n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'k' : Math.round(n).toLocaleString('en-US');
+const usd = n => n == null || isNaN(n) ? '—' : 'US$' + fmt(n);
+const VLABEL = {kill:'Kill', investigate:'Investigate', test:'Test', build:'Build'};
+const vBadge = v => `<span class="verdict v-${v}">${VLABEL[v]}</span>`;
+const srcLink = k => `<a href="${SOURCES[k].url}" target="_blank" rel="noopener">${esc(SOURCES[k].label)}</a>`;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),1800); }
+function wbLink(k){
+  const d = WB[S.country]?.[k]; if (!d) return '';
+  return `<a href="https://data.worldbank.org/indicator/${d.code}?locations=${S.country}" target="_blank" rel="noopener">WB ${d.code}, ${d.date}</a>`;
+}
+function statCard(stat){
+  const one = s => `<div class="stat"><div class="num">${esc(s.num)}</div><p>${esc(s.text)}<cite>Source: ${srcLink(s.src)}</cite></p></div>`;
+  return one(stat) + (stat.alt ? one(stat.alt) : '');
+}
+
+const STEPS = ['idea', ...DIMS.map(d=>d.id), 'report'];
+
+function render(){
+  const step = Math.min(S.step, STEPS.length-1);
+  const id = STEPS[step];
+  const prog = `<div class="progress no-print">${STEPS.map((s,i)=>`<button type="button" data-go="${i}" class="${i===step?'on':i<step?'done':''}" aria-label="Go to step ${i+1}"></button>`).join('')}</div>`;
+  let html = prog;
+  if (id === 'idea') html += renderIdea();
+  else if (id === 'report') html += renderReport();
+  else html += renderDim(DIMS.find(d=>d.id===id), step);
+  $('#app').innerHTML = html;
+  save();
+}
+
+function nav(step){
+  const last = step === STEPS.length-2;
+  return `<div class="nav no-print">
+    <button class="btn" type="button" data-go="${step-1}" ${step===0?'disabled':''}>← Back</button>
+    <button class="btn primary" type="button" data-go="${step+1}">${last?'See verdict →':'Next →'}</button></div>`;
+}
+
+function renderIdea(){
+  const w = WB[S.country];
+  const data = !S.country ? '' : w?.loading ? '<p class="muted small">Loading World Bank data…</p>'
+    : w?.error ? '<div class="warn">Could not reach the World Bank API. Check your connection; the rest of the tool still works.</div>'
+    : `<div class="data-grid">${Object.entries(INDICATORS).map(([k,ind])=>{
+        const d = w?.[k]; const v = d ? (k==='wa'||k==='net' ? d.value.toFixed(1)+'%' : k==='gdp' ? usd(d.value) : k==='ndens' ? d.value.toFixed(2) : fmt(d.value)) : 'n/a';
+        return `<div class="datum"><div class="v">${v}</div><div class="k">${ind.label}</div>${wbLink(k)}</div>`;}).join('')}</div>`;
+  return `<div class="card">
+    <div class="step-meta"><span>Step 1 of ${STEPS.length}</span><span>The idea</span></div>
+    <h1>Is your idea worth building?</h1>
+    <p class="muted">Score it on six dimensions (from YC's application and HBS market validation). Each one is rated twice: how strong the hypothesis is, and how much real evidence backs it. The verdict follows the evidence, not your enthusiasm.</p>
+    <label class="f">Idea name<input type="text" data-k="name" value="${esc(S.name)}" placeholder="e.g. ShiftMeal"></label>
+    <label class="f">One-liner <span class="hint">Who it's for and what job it does for them.</span><input type="text" data-k="oneliner" value="${esc(S.oneliner)}" placeholder="Meal-prep subscription for night-shift nurses"></label>
+    <div class="row">
+      <label class="f">Country you'll launch in
+        <select data-k="country"><option value="">Choose…</option>${COUNTRIES.map(([c,n])=>`<option value="${c}" ${S.country===c?'selected':''}>${n}</option>`).join('')}</select></label>
+      <div><label class="f">Customer type</label>
+        <div class="seg" role="radiogroup">${[['b2c','Consumers (B2C)'],['b2b','Businesses (B2B)']].map(([v,l])=>`<label><input type="radio" name="type" data-k="type" value="${v}" ${S.type===v?'checked':''}><span>${l}</span></label>`).join('')}</div></div>
+    </div>
+    ${data}
+    <h3 style="margin-top:20px">Bottom-up sizing</h3>
+    <p class="muted small">We bring the country data; you bring the one number only you can justify, with its source.</p>
+    <div class="row">
+      <label class="f">Price per customer per year (US$)<input type="number" min="0" data-k="price" value="${esc(S.price)}" placeholder="480"></label>
+      ${S.type==='b2c'
+        ? `<label class="f">Segment share (%) <span class="hint">% of working-age internet users who have this problem.</span><input type="number" min="0" max="100" step="0.01" data-k="share" value="${esc(S.share)}" placeholder="0.4"></label>`
+        : `<label class="f">Number of target businesses <span class="hint">In this country.</span><input type="number" min="0" data-k="businesses" value="${esc(S.businesses)}" placeholder="12000"></label>`}
+    </div>
+    <label class="f">Your source for that number <span class="hint">A link or a note. Unsourced numbers are flagged in the report.</span>
+      <input type="text" data-k="${S.type==='b2c'?'shareSrc':'bizSrc'}" value="${esc(S.type==='b2c'?S.shareSrc:S.bizSrc)}" placeholder="e.g. national statistics office, industry report, LinkedIn search count"></label>
+    <label class="f">Share you could realistically win in year 1–3 (%)<input type="number" min="0" max="100" step="0.1" data-k="capture" value="${esc(S.capture)}"></label>
+    <div class="preview">${marketPreview()}</div>
+    ${nav(0)}
+  </div>`;
+}
+
+function marketPreview(){
+  const m = marketSize();
+  if (!m) return '';
+  return `<div class="data-grid">
+    <div class="datum"><div class="v">${fmt(m.customers)}</div><div class="k">Reachable target customers</div></div>
+    <div class="datum"><div class="v">${usd(m.sam)}</div><div class="k">Serviceable market / yr</div></div>
+    <div class="datum"><div class="v">${usd(m.som)}</div><div class="k">Obtainable at ${esc(S.capture)}% / yr</div></div></div>`;
+}
+
+function renderDim(d, step){
+  const a = S.answers[d.id];
+  const i = DIMS.indexOf(d);
+  const qs = d.qs.map((q,qi)=>`<div class="q"><p>${esc(q)}</p>
+    <div class="seg" role="radiogroup">${YN.map(o=>`<label><input type="radio" name="${d.id}-q${qi}" data-dim="${d.id}" data-q="${qi}" value="${o.v}" ${a.q[qi]===o.v?'checked':''}><span>${o.l}</span></label>`).join('')}</div></div>`).join('');
+  const m = d.usesMarket ? marketSize() : null;
+  const sizeNote = d.usesMarket ? `<div class="q"><p>Bottom-up size from step 1: <strong>${m ? usd(m.sam)+' / yr' : 'not set'}</strong> <span class="muted small">(counts as a third answer: ≥US$100M = Yes, US$1–100M = Partly, &lt;US$1M = No)</span></p></div>` : '';
+  const ladder = LEVELS.map(l=>`<label><input type="radio" name="${d.id}-e" data-dim="${d.id}" data-e="1" value="${l.v}" ${a.e===l.v?'checked':''}>
+    <span><span class="lvl">${l.v}</span> ${esc(l.label)} <span class="tag ${l.kind==='do'?'do':l.kind==='say'?'say':l.kind==='mk'?'mk':''}">${l.tag}</span></span></label>`).join('');
+  const flags = (a.e===1 || a.e===2) ? `<h3 style="margin-top:16px">Mom Test check</h3>
+    <p class="muted small">Tick anything that applies to your evidence. Each one discounts it by half a level.</p>
+    <div class="checks">${RED_FLAGS.map((f,fi)=>`<label><input type="checkbox" data-dim="${d.id}" data-flag="${fi}" ${a.flags[fi]?'checked':''}> ${esc(f)}</label>`).join('')}</div>
+    <p class="small muted">Source: ${srcLink('mom')}</p>` : '';
+  return `<div class="card">
+    <div class="step-meta"><span>Step ${step+1} of ${STEPS.length} · Dimension ${i+1} of 6 · weight ${d.weight}%</span><span>${esc(d.origin)}</span></div>
+    <h2>${i+1}. ${esc(d.name)}</h2>
+    <p class="muted">${esc(d.intro)}</p>
+    ${statCard(d.stat)}
+    <h3 style="margin-top:20px">A · How strong is the hypothesis?</h3>
+    ${qs}${sizeNote}
+    <h3 style="margin-top:20px">B · What evidence do you have?</h3>
+    <p class="muted small">${esc(d.evidenceHint)}</p>
+    <div class="ladder" role="radiogroup">${ladder}</div>
+    ${flags}
+    ${nav(step)}
+  </div>`;
+}
+
+function matrixSVG(rows){
+  const W=360,H=300,P=36, sx=e=>P+e/5*(W-P-10), sy=h=>H-P-h/5*(H-P-10);
+  const zone=(x0,y0,x1,y1,cls,label)=>`<rect x="${sx(x0)}" y="${sy(y1)}" width="${sx(x1)-sx(x0)}" height="${sy(y0)-sy(y1)}" fill="var(--${cls}-bg)"/>
+    <text x="${sx(x0)+6}" y="${sy(y1)+15}" font-size="11" font-weight="700" fill="var(--${cls})">${label}</text>`;
+  const pts = rows.map((r,i)=>{ const jx=(i%3-1)*5, jy=(Math.floor(i/3)-0.5)*6;
+    return `<g><circle cx="${sx(r.E)+jx}" cy="${sy(r.H)+jy}" r="11" fill="var(--text)"/><text x="${sx(r.E)+jx}" y="${sy(r.H)+jy+4}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--bg)">${i+1}</text><title>${esc(r.d.name)}</title></g>`; }).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Hypothesis strength versus evidence for each dimension">
+    ${zone(0,0,5,2,'kill','KILL · rethink')}
+    ${zone(0,2,2,5,'inv','INVESTIGATE')}
+    ${zone(2,2,3,5,'test','TEST')}${zone(3,2,5,3,'test','')}
+    ${zone(3,3,5,5,'build','BUILD')}
+    <line x1="${sx(0)}" y1="${sy(0)}" x2="${sx(5)}" y2="${sy(0)}" stroke="var(--muted)"/>
+    <line x1="${sx(0)}" y1="${sy(0)}" x2="${sx(0)}" y2="${sy(5)}" stroke="var(--muted)"/>
+    ${[0,1,2,3,4,5].map(v=>`<text x="${sx(v)}" y="${H-P+14}" font-size="10" text-anchor="middle" fill="var(--muted)">${v}</text><text x="${P-8}" y="${sy(v)+3}" font-size="10" text-anchor="end" fill="var(--muted)">${v}</text>`).join('')}
+    <text x="${(W+P)/2}" y="${H-4}" font-size="11" text-anchor="middle" fill="var(--muted)">Evidence (Say → Do → Market)</text>
+    <text x="10" y="${(H-P)/2}" font-size="11" text-anchor="middle" fill="var(--muted)" transform="rotate(-90 10 ${(H-P)/2})">Hypothesis strength</text>
+    ${pts}</svg>`;
+}
+
+function renderReport(){
+  const o = overall();
+  const m = marketSize();
+  const tier = expTier(o.risky.E);
+  const exps = o.risky.d.exps[tier];
+  const unsourced = S.type==='b2c' ? !S.shareSrc.trim() : !S.bizSrc.trim();
+  const usedSrc = new Set(['tbi','mom','jtbd','wb']);
+  DIMS.forEach(d=>{ usedSrc.add(d.stat.src); if (d.stat.alt) usedSrc.add(d.stat.alt.src); });
+  exps.forEach(e=>usedSrc.add(e.src));
+  const afford = S.type==='b2c' && WB[S.country]?.gdp && +S.price ? (+S.price / WB[S.country].gdp.value * 100) : null;
+  const countryName = (COUNTRIES.find(c=>c[0]===S.country)||[])[1] || '—';
+  return `
+  <div class="card">
+    <div class="step-meta"><span>Verdict</span><span>${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</span></div>
+    <h1>${esc(S.name || 'Untitled idea')}</h1>
+    <p class="muted">${esc(S.oneliner)}${S.oneliner?' · ':''}${esc(countryName)} · ${S.type.toUpperCase()}</p>
+    <div class="hero">
+      <div class="big v-${o.verdict}">${VLABEL[o.verdict]}</div>
+      <div class="why"><p style="margin:0 0 6px"><strong>${esc(o.why)}</strong></p>
+        <p class="muted small" style="margin:0">Weighted hypothesis strength ${o.Hw.toFixed(1)}/5 · weighted evidence ${o.Ew.toFixed(1)}/5</p></div>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="card matrix"><h3>Where each dimension sits</h3>${matrixSVG(o.rows)}</div>
+    <div class="card"><h3>Riskiest assumption</h3>
+      <p><strong>${esc(o.risky.d.name)}</strong> ${vBadge(o.risky.verdict)}</p>
+      <p class="muted small">Highest weight × missing evidence. Test this first: if it's wrong, nothing else matters.</p>
+      ${statCard(o.risky.d.stat)}
+    </div>
+  </div>
+
+  <div class="card"><h3>Scorecard</h3>
+    <table><thead><tr><th>#</th><th>Dimension</th><th>Hypothesis</th><th>Evidence</th><th>Verdict</th></tr></thead><tbody>
+    ${o.rows.map((r,i)=>`<tr><td class="n">${i+1}</td><td>${esc(r.d.name)}<div class="muted small">${esc(r.d.origin)} · ${r.d.weight}%</div></td>
+      <td class="n">${r.H.toFixed(1)}<div class="bar"><i style="width:${r.H/5*100}%"></i></div></td>
+      <td class="n">${r.E.toFixed(1)}${r.flags?` <span class="muted small" title="Mom Test adjustment">(−${(r.raw-r.E).toFixed(1)})</span>`:''}<div class="bar"><i style="width:${r.E/5*100}%"></i></div></td>
+      <td>${vBadge(r.verdict)}</td></tr>`).join('')}
+    </tbody></table>
+  </div>
+
+  <div class="card"><h3>Market, bottom-up</h3>
+    ${m ? `<div class="data-grid">
+      <div class="datum"><div class="v">${fmt(m.customers)}</div><div class="k">Reachable target ${S.type==='b2b'?'businesses':'customers'}</div></div>
+      <div class="datum"><div class="v">${usd(m.sam)}</div><div class="k">Serviceable market / yr</div></div>
+      <div class="datum"><div class="v">${usd(m.som)}</div><div class="k">Obtainable at ${esc(S.capture)}% / yr</div></div></div>
+      <p class="small muted" style="margin-top:10px">${S.type==='b2c'
+        ? `Population (${wbLink('pop')}) × aged 15–64 (${wbLink('wa')}) × internet users (${wbLink('net')}) × your segment share ${esc(S.share)}% × US$${(+S.price).toLocaleString("en-US")}/yr.`
+        : `${fmt(+S.businesses)} target businesses × US$${(+S.price).toLocaleString("en-US")}/yr. Context: ${WB[S.country]?.nreg ? fmt(WB[S.country].nreg.value)+' new businesses registered per year ('+wbLink('nreg')+').' : 'no World Bank registration data for this country.'}`}
+        Segment source: ${unsourced ? '<strong>none given</strong>' : linkify((S.type==='b2c'?S.shareSrc:S.bizSrc).trim().replace(/\.$/,''))}.</p>`
+      : '<p class="muted">Not enough inputs to size the market. Go back to step 1.</p>'}
+    ${unsourced && m ? '<div class="warn">Your segment number has no source. The whole size estimate rests on it, so treat it as a guess until you cite it.</div>' : ''}
+    ${afford != null ? `<p class="small" style="margin-top:8px">Price = <strong>${afford.toFixed(1)}%</strong> of GDP per capita (${wbLink('gdp')}).${afford>5?' That is a big share of an average income: check your segment can afford it.':''}</p>` : ''}
+  </div>
+
+  <div class="card"><h3>Next experiment${exps.length>1?'s':''} · ${tier==='say'?'get first evidence (Say)':tier==='do'?'move from Say to Do':'strengthen Do evidence'}</h3>
+    ${exps.map(e=>`<div class="exp"><h3>${esc(e.t)}</h3><div class="meta">${esc(e.c)} · ${o.risky.d.name}</div>
+      <p style="margin:6px 0">${esc(e.d)}</p><p class="small"><strong>Success looks like:</strong> ${esc(e.m)}</p></div>`).join('')}
+    <p class="small muted">Decide the success threshold before running the test, and write it down.</p>
+  </div>
+
+  <div class="card"><h3>References</h3>
+    <ol class="refs">${[...usedSrc].map(k=>`<li>${srcLink(k)}</li>`).join('')}</ol>
+    <p class="small muted" style="margin-top:10px">Weights and thresholds are opinionated defaults, documented in the README. This is a thinking tool, not a prediction.</p>
+  </div>
+
+  <div class="nav no-print">
+    <button class="btn" type="button" data-go="${STEPS.length-2}">← Edit answers</button>
+    <span style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" type="button" id="btn-share">Copy share link</button>
+      <button class="btn primary" type="button" id="btn-print">Print / Save PDF</button>
+    </span>
+  </div>`;
+}
+
+/* ============================================================
+   Events
+   ============================================================ */
+function go(i){
+  S.step = Math.max(0, Math.min(STEPS.length-1, i));
+  if (location.hash) history.replaceState(null,'',location.pathname);
+  render(); window.scrollTo({top:0,behavior:'smooth'});
+}
+document.addEventListener('click', e => {
+  const g = e.target.closest('[data-go]');
+  if (g && !g.disabled) return go(+g.dataset.go);
+  if (e.target.id === 'btn-print') return window.print();
+  if (e.target.id === 'btn-share'){
+    const url = location.origin + location.pathname + '#' + encodeShare();
+    navigator.clipboard?.writeText(url).then(()=>toast('Link copied'), ()=>prompt('Copy this link', url));
+  }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset.k){
+    S[t.dataset.k] = t.value;
+    if (t.dataset.k === 'country') fetchWB(t.value);
+    if (t.dataset.k === 'type' || t.dataset.k === 'country') render();
+  } else if (t.dataset.q != null){
+    S.answers[t.dataset.dim].q[+t.dataset.q] = +t.value;
+  } else if (t.dataset.e){
+    S.answers[t.dataset.dim].e = +t.value; render();
+  } else if (t.dataset.flag != null){
+    S.answers[t.dataset.dim].flags[+t.dataset.flag] = t.checked;
+  }
+  save();
+});
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.k && t.tagName === 'INPUT' && t.type !== 'radio'){
+    S[t.dataset.k] = t.value; save();
+    if (['price','share','capture','businesses'].includes(t.dataset.k)) refreshPreview();
+  }
+});
+function refreshPreview(){
+  const card = document.querySelector('#app .card');
+  card.querySelector('.preview').innerHTML = marketPreview();
+}
+$('#btn-example').onclick = () => { S = merge(JSON.parse(JSON.stringify(EXAMPLE))); S.step = STEPS.length-1; fetchWB(S.country); go(S.step); toast('Example loaded'); };
+$('#btn-reset').onclick = () => { if (confirm('Clear all answers?')){ S = blankState(); go(0); } };
+$('#home').onclick = e => { e.preventDefault(); go(0); };
+$('#btn-theme').onclick = () => {
+  const r = document.documentElement;
+  const dark = r.dataset.theme ? r.dataset.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  r.dataset.theme = dark ? 'light' : 'dark';
+};
+
+S = loadState();
+if (S.country) fetchWB(S.country);
+render();
+</script>
+</body>
+</html>
